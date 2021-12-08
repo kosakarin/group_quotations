@@ -1,4 +1,4 @@
-import base64, os, random, nonebot
+import base64, os, random, nonebot, hoshino
 from io import BytesIO
 from PIL import Image
 from hoshino import Service, aiorequests
@@ -106,7 +106,7 @@ async def send_group_10(bot, ev):  #和单张发送类似
             msg_list.append(f'[CQ:image,file={base64_str}]')
         if message_type:
             msg = render_forward_msg(msg_list)
-            await bot.send(ev, msg)
+            await hoshino.get_bot().send_group_forward_msg(group_id=ev.group_id, messages = msg)
         else:
             for msg in msg_list:
                 await bot.send(ev, msg)
