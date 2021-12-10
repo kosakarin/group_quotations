@@ -3,7 +3,7 @@ from PIL import Image, ImageSequence
 from io import BytesIO
 from amzqr import amzqr
 
-class qrcode: 
+class qrcode:   #amzqr可以提供的参数条目比较多，但是很多都没有必要提供，就简化了下
     def __init__(self, text, picture = None, colorized = False, contrast = 1.0, brightness = 1.0, image_type = 'png'):
         self.text = str(text)
         self.picture = picture
@@ -17,17 +17,17 @@ class qrcode:
         self.load_qrcode_to_base64()
         self.remove_temp_img()
 
-    def get_qrcode(self):
+    def get_qrcode(self):  #将参数传给amzqr去生成二维码 qr_name的返回就是生成的二维码保存路径，直接可以调用Image.open去打开
         self.version, self.level, self.qr_name = amzqr.run(self.text,
                                                            picture = self.picture,
                                                            colorized = self.colorized,
                                                            contrast = self.contrast,
                                                            brightness = self.brightness)
     
-    def load_qrcode(self):
-        self.qr_img = Image.open(self.qr_name)
+    def load_qrcode(self): #打开生成好的二维码
+        self.qr_img = Image.open(self.qr_name) 
     
-    def load_qrcode_to_base64(self):
+    def load_qrcode_to_base64(self):  #用base64来发送图片效果比较好，比R的限制少多了
         buf = BytesIO()
         if self.image_type == 'png':
             qr_img = self.remake_qrcode(self.qr_img)
@@ -48,4 +48,4 @@ class qrcode:
         return new_img
 
     def remove_temp_img(self):
-        os.remove(self.qr_name)
+        os.remove(self.qr_name)  #删掉生成的二维码图片
