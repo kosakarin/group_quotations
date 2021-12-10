@@ -42,8 +42,9 @@ class qrcode:
             self.base64_str =  f'base64://{base64.b64encode(buf.getvalue()).decode()}'
     
     def remake_qrcode(self, qr_img):
-        new_img = Image.new('RGB',(qr_img.size[0] - 54, qr_img.size[1] - 54), (255, 255, 255))
-        new_img.paste(qr_img,(-27,-27))
+        crop_size = 27  #原图像白边为36像素，每个特征点为9像素,故整体居中裁剪27像素较为美观
+        new_img = qr_img.crop((crop_size, crop_size, 
+                               qr_img.size[0] - crop_size, qr_img.size[1] - crop_size)) 
         return new_img
 
     def remove_temp_img(self):
