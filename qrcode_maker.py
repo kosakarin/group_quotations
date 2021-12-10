@@ -42,7 +42,7 @@ class qrcode:
             self.base64_str =  f'base64://{base64.b64encode(buf.getvalue()).decode()}'
     
     def remake_qrcode(self, qr_img):
-        new_img = Image.new('RGB',(qr_img.size[0] - 54, qr_img.size[1] - 57), (255, 255, 255))
+        new_img = Image.new('RGB',(qr_img.size[0] - 54, qr_img.size[1] - 54), (255, 255, 255))
         new_img.paste(qr_img,(-27,-27))
         return new_img
 
