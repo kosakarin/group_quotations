@@ -71,8 +71,7 @@ async def save_img(url):
 @sv.on_prefix('!qr')
 async def qrcode_maker(bot, ev):
     msg = ev.message
-    picture = None
-    text = ''
+    picture, text, image_type = [None, '', 'png']
     for i in msg:
         if i.type == 'image':
             try:
