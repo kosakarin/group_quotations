@@ -34,7 +34,7 @@
 
 注2：已知问题： 1.无法发送gif图片（源码应该没问题，但是就是发不出来）
 
-2.无法生成中文二维码：生成器api的问题，拿的这个api不支持中文，看看能不能找个支持的替换下
+2.无法生成中文二维码：生成器api的问题；[解决方法]https://github.com/x-hw/amazing-qr/pull/59 按照这个PR中的更改自行去C:\Users\Administrator\AppData\Local\Programs\Python\Python39\Lib\site-packages\amzqr下修改这几处位置即可（注：MyQR和amzqr为同一款二维码生成器，内部源码我都看了，变量名称都一模一样）
 
 3.image = Image.open(BytesIO(await response.content))报错：如果你的命令语句是转发别人的，就会出现这个问题，原因未知
 
