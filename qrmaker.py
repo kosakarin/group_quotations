@@ -61,7 +61,7 @@ async def save_img(url):
     response = await aiorequests.get(url, headers=headers)
     image = Image.open(BytesIO(await response.content))
     try:
-        image_type = 'gif' if image.n_frames >= 1 else 'png'
+        image_type = 'gif' if image.n_frames >= 1 and image.n_frames <= 200 else 'png'
     except:
         image_type = 'png'
     image.save(os.path.join(os.path.dirname(__file__), f'temp.{image_type}'))
