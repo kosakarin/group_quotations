@@ -13,6 +13,7 @@ class qrcode:
         self.image_type = image_type
 		
         self.get_qrcode()
+        self.load_qrcode()
         self.load_qrcode_to_base64()
         self.remove_temp_img()
 
@@ -22,22 +23,28 @@ class qrcode:
                                                            colorized = self.colorized,
                                                            contrast = self.contrast,
                                                            brightness = self.brightness)
-
+    
+    def load_qrcode(self):
+        self.qr_img = Image.open(self.qr_name)
+    
     def load_qrcode_to_base64(self):
-        qr_img = Image.open(self.qr_name)
         buf = BytesIO()
         if self.image_type == 'png':
+            qr_img = self.remake_qrcode(self.qr_img)
             qr_img.save(buf, format = 'PNG')
             self.base64_str = f'base64://{base64.b64encode(buf.getvalue()).decode()}'
         elif self.image_type == 'gif':
-            print('gif')
-            self.info = qr_img.info
-            sequence = [f.copy() for f in ImageSequence.Iterator(qr_img)]
+            self.info = self.qr_img.info
+            sequence = [self.remake_qrcode(f.copy()) for f in ImageSequence.Iterator(self.qr_img)]
             sequence[0].save(buf, format='GIF', save_all=True,
                          append_images=sequence[1:], disposal=2,
                          quality=100, **self.info)
             self.base64_str =  f'base64://{base64.b64encode(buf.getvalue()).decode()}'
-
+    
+    def remake_qrcode(self, qr_img):
+        new_img = Image.new('RGB',(qr_img.size[0] - 54, qr_img.size[1] - 57), (255, 255, 255))
+        new_img.paste(qr_img,(-27,-27))
+        return new_img
 
     def remove_temp_img(self):
         os.remove(self.qr_name)
