@@ -48,9 +48,9 @@ def get_set(arrs):  #这个是用于解析命令语句
         else:
             index += 1
             continue  #防止漏传没用break，反正也就4个，几乎不影响计算速度
-    if not re_result[2] or re_result[2] not in range(0,1): #防止传递的参数超界
+    if not re_result[2] or (re_result[2] * 10) not in range(0, 11): #防止传递的参数超界
         re_result[2] = 1.0
-    if not re_result[3] or re_result[3] not in range(0,1):
+    if not re_result[3] or (re_result[3] * 10) not in range(0, 11):
         re_result[3] = 1.0
         
     return re_result
