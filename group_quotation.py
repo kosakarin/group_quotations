@@ -99,7 +99,9 @@ async def send_group_10(bot, ev):  #和单张发送类似
             return
         msg_list = []
         for i in range(10):
-            image = Image.open(f'{_path}{gid}/{random.choice(image_list)}')
+            img_name = random.choice(image_list)
+            image = Image.open(f'{_path}{gid}/{img_name}')
+            image_list.remove(img_name)
             buf = BytesIO()
             image.save(buf, format='PNG')
             base64_str = f'base64://{base64.b64encode(buf.getvalue()).decode()}'
