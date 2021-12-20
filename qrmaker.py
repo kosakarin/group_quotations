@@ -2,8 +2,8 @@ import hoshino, os, asyncio
 from .qrcode_maker import qrcode
 from hoshino import Service,  aiorequests, R
 from hoshino.typing import CQEvent, MessageSegment as ms
-from PIL import Image
-from io import BytesIO, ImageSequence
+from PIL import Image, ImageSequence
+from io import BytesIO
 
 sv = Service('二维码快速生成', bundle='qrcode', help_=''.strip())
 
