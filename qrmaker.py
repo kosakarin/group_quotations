@@ -3,7 +3,7 @@ from .qrcode_maker import qrcode
 from hoshino import Service,  aiorequests, R
 from hoshino.typing import CQEvent, MessageSegment as ms
 from PIL import Image
-from io import BytesIO
+from io import BytesIO, ImageSequence
 
 sv = Service('二维码快速生成', bundle='qrcode', help_=''.strip())
 
@@ -58,14 +58,28 @@ def get_set(arrs):  #这个是用于解析命令语句
 
 
 async def save_img(url): #从消息中拿图
-    response = await aiorequests.get(url, headers=headers) #aiorequests是hoshino异步封装过的requests 这里可以直接用requests，用reques的话只是无法异步而已
+    response = await aiorequests.get(url,
+                                     headers=headers)  # aiorequests是hoshino异步封装过的requests 这里可以直接用requests，用reques的话只是无法异步而已
     image = Image.open(BytesIO(await response.content))
+    info = image.info
+
     try:
         image_type = 'gif' if image.n_frames > 1 and image.n_frames <= 200 else 'png'
     except:
         image_type = 'png'
-    image.save(os.path.join(os.path.dirname(__file__), f'temp.{image_type}'))  #amzqr和MyQR都是从本地读取图片，提供的图片也是本地存储位置而不是Image.open的图片，所有要先保存到本地
-    picture = os.path.join(os.path.dirname(__file__), f'temp.{image_type}') #这个是合成以下刚刚的那个path 其实可以先合成再save的（小声）
+
+    picture = os.path.join(os.path.dirname(__file__), f'temp.{image_type}')  # 这个是合成以下刚刚的那个path 其实可以先合成再save的（小声）
+    # amzqr和MyQR都是从本地读取图片，提供的图片也是本地存储位置而不是Image.open的图片，所有要先保存到本地
+    if image_type == 'gif':
+        # gif保存
+        frames = [f.copy() for f in ImageSequence.Iterator(image)]
+        frames[0].save(picture, format='GIF', save_all=True,
+                       append_images=frames[1:], disposal=2,
+                       quality=80, **info)
+    else:
+        # png保存
+        image.save(os.path.join(os.path.dirname(__file__),
+                                f'temp.{image_type}'))
     return picture, image_type
 
 @sv.on_prefix('!qr')
