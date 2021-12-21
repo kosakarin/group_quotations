@@ -32,7 +32,7 @@
 
 注1：所有参数分隔用的是空格分隔，所以请勿在文本中间加入空格，'aaa bbb'会被识别为'aaa'和'bbb'导致只传入aaa
 
-注2：已知问题： 1.无法发送gif图片（源码应该没问题，但是就是发不出来）
+注2：已知问题： 1.无法发送gif图片（已修复，如果报错请注释掉源码中几行删除临时文件的代码，临时文件不删除并不会影响下一次使用）
 
 2.无法生成中文二维码：生成器api的问题；[解决方法](https://github.com/x-hw/amazing-qr/pull/59) 按照这个PR中的更改自行去C:\Users\Administrator\AppData\Local\Programs\Python\Python39\Lib\site-packages\amzqr下修改这几处位置即可（注：MyQR和amzqr为同一款二维码生成器，内部源码我都看了，变量名称都一模一样）
 
