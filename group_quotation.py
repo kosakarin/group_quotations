@@ -1,4 +1,4 @@
-import base64, os, random, nonebot, hoshino
+import base64, os, random, nonebot, hoshino, time
 from io import BytesIO
 from PIL import Image
 from hoshino import Service, aiorequests
@@ -38,10 +38,6 @@ def get_all_img_url(event): #从消息中提取图片URL
             all_url.append(i["data"]["url"])
     return all_url
 
-def con_num(_path): #保存时计数
-    num = len(sorted(fn for fn in os.listdir(_path)))
-    return num
-
 send_times = 0 #用于计算触发上传后发送了几句不含图片语句，超过3句将自动结束上传，防止卡死
 async def save_img(image_url, gid): #保存图片
     global send_times
@@ -54,7 +50,7 @@ async def save_img(image_url, gid): #保存图片
             image = Image.open(BytesIO(await response.content))
             if not os.path.exists(f'{_path}{gid}'):
                 os.mkdir(f'{_path}{gid}')
-            image.save(f'{_path}{gid}/{con_num(_path + gid) + 1}.png')
+            image.save(f'{_path}{gid}/{int(time.time())}.png')
             
         return '图片保存成功\n', send_times
     except:
@@ -114,3 +110,12 @@ async def send_group_10(bot, ev):  #和单张发送类似
                 await bot.send(ev, msg)
     except:
         await bot.send(ev, '没有语录哦')
+
+@sv.on_fullmatch('语录数量')
+async def send_nums(bot, ev):
+    gid = str(ev.group_id)
+    try:
+        len_ = len(sorted(fn for fn in os.listdir(f'{_path}{gid}') if fn.endswith('.png')))
+    except Exception as e:
+        len_ = 0
+    await bot.send(ev,f'当前本群共计上传{len_}条语录哦') #发送图片        
